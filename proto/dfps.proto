@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package dfps;
+
+option go_package = "github.com/Gurveer1510/dfps/proto/dfpspb";
+
+service Coordinator {
+    rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
+    rpc GetTask(GetTaskRequest) returns (GetTaskResponse);
+    rpc ReportTask (GetTaskRequest) returns (GetTaskReportResponse);
+}
+
+message HeartbeatRequest {
+    string worker_id = 1;
+    string task_id = 2;
+}
+
+message HeartbeatResponse {
+    bool ok = 1;
+}
+
+message GetTaskRequest {
+    string task_id = 1;
+}
+
+enum TaskStatus {
+    TASK_UNSPECIFIED = 0; // The first constant must map to zero in proto3
+  TASK_PENDING = 1; 
+  TASK_PROCESSING = 2;
+  TASK_DONE = 3;
+  TASK_FAILED = 4;
+}
+
+message GetTaskResponse {
+    string id = 1;
+    string  job_id= 2;
+    string file_path = 3;
+    TaskStatus state = 4;
+    int64 length = 5;
+}
+
+message GetTaskReportResponse {
+      string id = 1;
+    string  job_id= 2;
+    string file_path = 3;
+    TaskStatus status = 4;
+    int64 start = 5;
+    int64 length = 6;
+    string output_path = 7;
+    TaskStatus state = 8;
+    string worker_id = 9;
+    string claimed_at = 10;
+    int32 attempt_no = 11;
+}
