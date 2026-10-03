@@ -5,50 +5,50 @@ package dfps;
 option go_package = "github.com/Gurveer1510/dfps/proto/dfpspb";
 
 service Coordinator {
-    rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
-    rpc GetTask(GetTaskRequest) returns (GetTaskResponse);
-    rpc ReportTask (GetTaskRequest) returns (GetTaskReportResponse);
+  rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
+  rpc GetTask(GetTaskRequest) returns (GetTaskResponse);
+  rpc ReportTask(ReportTaskRequest) returns (ReportTaskResponse);
 }
 
 message HeartbeatRequest {
-    string worker_id = 1;
-    string task_id = 2;
+  string worker_id = 1;
+  string task_id = 2;
 }
 
 message HeartbeatResponse {
-    bool ok = 1;
+  bool ok = 1;
 }
 
 message GetTaskRequest {
-    string task_id = 1;
+  string worker_id = 1;
 }
 
-enum TaskStatus {
-    TASK_UNSPECIFIED = 0; // The first constant must map to zero in proto3
-  TASK_PENDING = 1; 
-  TASK_PROCESSING = 2;
-  TASK_DONE = 3;
-  TASK_FAILED = 4;
+enum Action {
+  ACTION_UNSPECIFIED = 0;
+  ACTION_RUN = 1;
+  ACTION_WAIT = 2;
+  ACTION_SHUTDOWN = 3;
+}
+
+message Task {
+  string id = 1;
+  string job_id = 2;
+  string file_path = 3;
+  int64 start = 4;
+  int64 length = 5;
+  string output_path = 6;
 }
 
 message GetTaskResponse {
-    string id = 1;
-    string  job_id= 2;
-    string file_path = 3;
-    TaskStatus state = 4;
-    int64 length = 5;
+  Task task = 1;
+  Action action = 2;
 }
 
-message GetTaskReportResponse {
-      string id = 1;
-    string  job_id= 2;
-    string file_path = 3;
-    TaskStatus status = 4;
-    int64 start = 5;
-    int64 length = 6;
-    string output_path = 7;
-    TaskStatus state = 8;
-    string worker_id = 9;
-    string claimed_at = 10;
-    int32 attempt_no = 11;
+message ReportTaskRequest {
+  string task_id = 1;
+  string worker_id = 2;
+  bool success = 3;
+  string failure_reason = 4;
 }
+
+message ReportTaskResponse {}

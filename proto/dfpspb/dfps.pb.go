@@ -21,58 +21,55 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type TaskStatus int32
+type Action int32
 
 const (
-	TaskStatus_TASK_UNSPECIFIED TaskStatus = 0 // The first constant must map to zero in proto3
-	TaskStatus_TASK_PENDING     TaskStatus = 1
-	TaskStatus_TASK_PROCESSING  TaskStatus = 2
-	TaskStatus_TASK_DONE        TaskStatus = 3
-	TaskStatus_TASK_FAILED      TaskStatus = 4
+	Action_ACTION_UNSPECIFIED Action = 0
+	Action_ACTION_RUN         Action = 1
+	Action_ACTION_WAIT        Action = 2
+	Action_ACTION_SHUTDOWN    Action = 3
 )
 
-// Enum value maps for TaskStatus.
+// Enum value maps for Action.
 var (
-	TaskStatus_name = map[int32]string{
-		0: "TASK_UNSPECIFIED",
-		1: "TASK_PENDING",
-		2: "TASK_PROCESSING",
-		3: "TASK_DONE",
-		4: "TASK_FAILED",
+	Action_name = map[int32]string{
+		0: "ACTION_UNSPECIFIED",
+		1: "ACTION_RUN",
+		2: "ACTION_WAIT",
+		3: "ACTION_SHUTDOWN",
 	}
-	TaskStatus_value = map[string]int32{
-		"TASK_UNSPECIFIED": 0,
-		"TASK_PENDING":     1,
-		"TASK_PROCESSING":  2,
-		"TASK_DONE":        3,
-		"TASK_FAILED":      4,
+	Action_value = map[string]int32{
+		"ACTION_UNSPECIFIED": 0,
+		"ACTION_RUN":         1,
+		"ACTION_WAIT":        2,
+		"ACTION_SHUTDOWN":    3,
 	}
 )
 
-func (x TaskStatus) Enum() *TaskStatus {
-	p := new(TaskStatus)
+func (x Action) Enum() *Action {
+	p := new(Action)
 	*p = x
 	return p
 }
 
-func (x TaskStatus) String() string {
+func (x Action) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (TaskStatus) Descriptor() protoreflect.EnumDescriptor {
+func (Action) Descriptor() protoreflect.EnumDescriptor {
 	return file_proto_dfps_proto_enumTypes[0].Descriptor()
 }
 
-func (TaskStatus) Type() protoreflect.EnumType {
+func (Action) Type() protoreflect.EnumType {
 	return &file_proto_dfps_proto_enumTypes[0]
 }
 
-func (x TaskStatus) Number() protoreflect.EnumNumber {
+func (x Action) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use TaskStatus.Descriptor instead.
-func (TaskStatus) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use Action.Descriptor instead.
+func (Action) EnumDescriptor() ([]byte, []int) {
 	return file_proto_dfps_proto_rawDescGZIP(), []int{0}
 }
 
@@ -174,7 +171,7 @@ func (x *HeartbeatResponse) GetOk() bool {
 
 type GetTaskRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TaskId        string                 `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	WorkerId      string                 `protobuf:"bytes,1,opt,name=worker_id,json=workerId,proto3" json:"worker_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -209,27 +206,108 @@ func (*GetTaskRequest) Descriptor() ([]byte, []int) {
 	return file_proto_dfps_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetTaskRequest) GetTaskId() string {
+func (x *GetTaskRequest) GetWorkerId() string {
 	if x != nil {
-		return x.TaskId
+		return x.WorkerId
+	}
+	return ""
+}
+
+type Task struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	JobId         string                 `protobuf:"bytes,2,opt,name=job_id,json=jobId,proto3" json:"job_id,omitempty"`
+	FilePath      string                 `protobuf:"bytes,3,opt,name=file_path,json=filePath,proto3" json:"file_path,omitempty"`
+	Start         int64                  `protobuf:"varint,4,opt,name=start,proto3" json:"start,omitempty"`
+	Length        int64                  `protobuf:"varint,5,opt,name=length,proto3" json:"length,omitempty"`
+	OutputPath    string                 `protobuf:"bytes,6,opt,name=output_path,json=outputPath,proto3" json:"output_path,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Task) Reset() {
+	*x = Task{}
+	mi := &file_proto_dfps_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Task) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Task) ProtoMessage() {}
+
+func (x *Task) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_dfps_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Task.ProtoReflect.Descriptor instead.
+func (*Task) Descriptor() ([]byte, []int) {
+	return file_proto_dfps_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Task) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Task) GetJobId() string {
+	if x != nil {
+		return x.JobId
+	}
+	return ""
+}
+
+func (x *Task) GetFilePath() string {
+	if x != nil {
+		return x.FilePath
+	}
+	return ""
+}
+
+func (x *Task) GetStart() int64 {
+	if x != nil {
+		return x.Start
+	}
+	return 0
+}
+
+func (x *Task) GetLength() int64 {
+	if x != nil {
+		return x.Length
+	}
+	return 0
+}
+
+func (x *Task) GetOutputPath() string {
+	if x != nil {
+		return x.OutputPath
 	}
 	return ""
 }
 
 type GetTaskResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	JobId         string                 `protobuf:"bytes,2,opt,name=job_id,json=jobId,proto3" json:"job_id,omitempty"`
-	FilePath      string                 `protobuf:"bytes,3,opt,name=file_path,json=filePath,proto3" json:"file_path,omitempty"`
-	State         TaskStatus             `protobuf:"varint,4,opt,name=state,proto3,enum=dfps.TaskStatus" json:"state,omitempty"`
-	Length        int64                  `protobuf:"varint,5,opt,name=length,proto3" json:"length,omitempty"`
+	Task          *Task                  `protobuf:"bytes,1,opt,name=task,proto3" json:"task,omitempty"`
+	Action        Action                 `protobuf:"varint,2,opt,name=action,proto3,enum=dfps.Action" json:"action,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetTaskResponse) Reset() {
 	*x = GetTaskResponse{}
-	mi := &file_proto_dfps_proto_msgTypes[3]
+	mi := &file_proto_dfps_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -241,7 +319,7 @@ func (x *GetTaskResponse) String() string {
 func (*GetTaskResponse) ProtoMessage() {}
 
 func (x *GetTaskResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_dfps_proto_msgTypes[3]
+	mi := &file_proto_dfps_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -254,76 +332,48 @@ func (x *GetTaskResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTaskResponse.ProtoReflect.Descriptor instead.
 func (*GetTaskResponse) Descriptor() ([]byte, []int) {
-	return file_proto_dfps_proto_rawDescGZIP(), []int{3}
+	return file_proto_dfps_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetTaskResponse) GetId() string {
+func (x *GetTaskResponse) GetTask() *Task {
 	if x != nil {
-		return x.Id
+		return x.Task
 	}
-	return ""
+	return nil
 }
 
-func (x *GetTaskResponse) GetJobId() string {
+func (x *GetTaskResponse) GetAction() Action {
 	if x != nil {
-		return x.JobId
+		return x.Action
 	}
-	return ""
+	return Action_ACTION_UNSPECIFIED
 }
 
-func (x *GetTaskResponse) GetFilePath() string {
-	if x != nil {
-		return x.FilePath
-	}
-	return ""
-}
-
-func (x *GetTaskResponse) GetState() TaskStatus {
-	if x != nil {
-		return x.State
-	}
-	return TaskStatus_TASK_UNSPECIFIED
-}
-
-func (x *GetTaskResponse) GetLength() int64 {
-	if x != nil {
-		return x.Length
-	}
-	return 0
-}
-
-type GetTaskReportResponse struct {
+type ReportTaskRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	JobId         string                 `protobuf:"bytes,2,opt,name=job_id,json=jobId,proto3" json:"job_id,omitempty"`
-	FilePath      string                 `protobuf:"bytes,3,opt,name=file_path,json=filePath,proto3" json:"file_path,omitempty"`
-	Status        TaskStatus             `protobuf:"varint,4,opt,name=status,proto3,enum=dfps.TaskStatus" json:"status,omitempty"`
-	Start         int64                  `protobuf:"varint,5,opt,name=start,proto3" json:"start,omitempty"`
-	Length        int64                  `protobuf:"varint,6,opt,name=length,proto3" json:"length,omitempty"`
-	OutputPath    string                 `protobuf:"bytes,7,opt,name=output_path,json=outputPath,proto3" json:"output_path,omitempty"`
-	State         TaskStatus             `protobuf:"varint,8,opt,name=state,proto3,enum=dfps.TaskStatus" json:"state,omitempty"`
-	WorkerId      string                 `protobuf:"bytes,9,opt,name=worker_id,json=workerId,proto3" json:"worker_id,omitempty"`
-	ClaimedAt     string                 `protobuf:"bytes,10,opt,name=claimed_at,json=claimedAt,proto3" json:"claimed_at,omitempty"`
-	AttemptNo     int32                  `protobuf:"varint,11,opt,name=attempt_no,json=attemptNo,proto3" json:"attempt_no,omitempty"`
+	TaskId        string                 `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	WorkerId      string                 `protobuf:"bytes,2,opt,name=worker_id,json=workerId,proto3" json:"worker_id,omitempty"`
+	Success       bool                   `protobuf:"varint,3,opt,name=success,proto3" json:"success,omitempty"`
+	FailureReason string                 `protobuf:"bytes,4,opt,name=failure_reason,json=failureReason,proto3" json:"failure_reason,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetTaskReportResponse) Reset() {
-	*x = GetTaskReportResponse{}
-	mi := &file_proto_dfps_proto_msgTypes[4]
+func (x *ReportTaskRequest) Reset() {
+	*x = ReportTaskRequest{}
+	mi := &file_proto_dfps_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetTaskReportResponse) String() string {
+func (x *ReportTaskRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetTaskReportResponse) ProtoMessage() {}
+func (*ReportTaskRequest) ProtoMessage() {}
 
-func (x *GetTaskReportResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_dfps_proto_msgTypes[4]
+func (x *ReportTaskRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_dfps_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -334,86 +384,73 @@ func (x *GetTaskReportResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetTaskReportResponse.ProtoReflect.Descriptor instead.
-func (*GetTaskReportResponse) Descriptor() ([]byte, []int) {
-	return file_proto_dfps_proto_rawDescGZIP(), []int{4}
+// Deprecated: Use ReportTaskRequest.ProtoReflect.Descriptor instead.
+func (*ReportTaskRequest) Descriptor() ([]byte, []int) {
+	return file_proto_dfps_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetTaskReportResponse) GetId() string {
+func (x *ReportTaskRequest) GetTaskId() string {
 	if x != nil {
-		return x.Id
+		return x.TaskId
 	}
 	return ""
 }
 
-func (x *GetTaskReportResponse) GetJobId() string {
-	if x != nil {
-		return x.JobId
-	}
-	return ""
-}
-
-func (x *GetTaskReportResponse) GetFilePath() string {
-	if x != nil {
-		return x.FilePath
-	}
-	return ""
-}
-
-func (x *GetTaskReportResponse) GetStatus() TaskStatus {
-	if x != nil {
-		return x.Status
-	}
-	return TaskStatus_TASK_UNSPECIFIED
-}
-
-func (x *GetTaskReportResponse) GetStart() int64 {
-	if x != nil {
-		return x.Start
-	}
-	return 0
-}
-
-func (x *GetTaskReportResponse) GetLength() int64 {
-	if x != nil {
-		return x.Length
-	}
-	return 0
-}
-
-func (x *GetTaskReportResponse) GetOutputPath() string {
-	if x != nil {
-		return x.OutputPath
-	}
-	return ""
-}
-
-func (x *GetTaskReportResponse) GetState() TaskStatus {
-	if x != nil {
-		return x.State
-	}
-	return TaskStatus_TASK_UNSPECIFIED
-}
-
-func (x *GetTaskReportResponse) GetWorkerId() string {
+func (x *ReportTaskRequest) GetWorkerId() string {
 	if x != nil {
 		return x.WorkerId
 	}
 	return ""
 }
 
-func (x *GetTaskReportResponse) GetClaimedAt() string {
+func (x *ReportTaskRequest) GetSuccess() bool {
 	if x != nil {
-		return x.ClaimedAt
+		return x.Success
+	}
+	return false
+}
+
+func (x *ReportTaskRequest) GetFailureReason() string {
+	if x != nil {
+		return x.FailureReason
 	}
 	return ""
 }
 
-func (x *GetTaskReportResponse) GetAttemptNo() int32 {
+type ReportTaskResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ReportTaskResponse) Reset() {
+	*x = ReportTaskResponse{}
+	mi := &file_proto_dfps_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ReportTaskResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReportTaskResponse) ProtoMessage() {}
+
+func (x *ReportTaskResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_dfps_proto_msgTypes[6]
 	if x != nil {
-		return x.AttemptNo
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
 	}
-	return 0
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReportTaskResponse.ProtoReflect.Descriptor instead.
+func (*ReportTaskResponse) Descriptor() ([]byte, []int) {
+	return file_proto_dfps_proto_rawDescGZIP(), []int{6}
 }
 
 var File_proto_dfps_proto protoreflect.FileDescriptor
@@ -425,43 +462,38 @@ const file_proto_dfps_proto_rawDesc = "" +
 	"\tworker_id\x18\x01 \x01(\tR\bworkerId\x12\x17\n" +
 	"\atask_id\x18\x02 \x01(\tR\x06taskId\"#\n" +
 	"\x11HeartbeatResponse\x12\x0e\n" +
-	"\x02ok\x18\x01 \x01(\bR\x02ok\")\n" +
-	"\x0eGetTaskRequest\x12\x17\n" +
-	"\atask_id\x18\x01 \x01(\tR\x06taskId\"\x95\x01\n" +
-	"\x0fGetTaskResponse\x12\x0e\n" +
+	"\x02ok\x18\x01 \x01(\bR\x02ok\"-\n" +
+	"\x0eGetTaskRequest\x12\x1b\n" +
+	"\tworker_id\x18\x01 \x01(\tR\bworkerId\"\x99\x01\n" +
+	"\x04Task\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x15\n" +
 	"\x06job_id\x18\x02 \x01(\tR\x05jobId\x12\x1b\n" +
-	"\tfile_path\x18\x03 \x01(\tR\bfilePath\x12&\n" +
-	"\x05state\x18\x04 \x01(\x0e2\x10.dfps.TaskStatusR\x05state\x12\x16\n" +
-	"\x06length\x18\x05 \x01(\x03R\x06length\"\xd7\x02\n" +
-	"\x15GetTaskReportResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x15\n" +
-	"\x06job_id\x18\x02 \x01(\tR\x05jobId\x12\x1b\n" +
-	"\tfile_path\x18\x03 \x01(\tR\bfilePath\x12(\n" +
-	"\x06status\x18\x04 \x01(\x0e2\x10.dfps.TaskStatusR\x06status\x12\x14\n" +
-	"\x05start\x18\x05 \x01(\x03R\x05start\x12\x16\n" +
-	"\x06length\x18\x06 \x01(\x03R\x06length\x12\x1f\n" +
-	"\voutput_path\x18\a \x01(\tR\n" +
-	"outputPath\x12&\n" +
-	"\x05state\x18\b \x01(\x0e2\x10.dfps.TaskStatusR\x05state\x12\x1b\n" +
-	"\tworker_id\x18\t \x01(\tR\bworkerId\x12\x1d\n" +
+	"\tfile_path\x18\x03 \x01(\tR\bfilePath\x12\x14\n" +
+	"\x05start\x18\x04 \x01(\x03R\x05start\x12\x16\n" +
+	"\x06length\x18\x05 \x01(\x03R\x06length\x12\x1f\n" +
+	"\voutput_path\x18\x06 \x01(\tR\n" +
+	"outputPath\"W\n" +
+	"\x0fGetTaskResponse\x12\x1e\n" +
+	"\x04task\x18\x01 \x01(\v2\n" +
+	".dfps.TaskR\x04task\x12$\n" +
+	"\x06action\x18\x02 \x01(\x0e2\f.dfps.ActionR\x06action\"\x8a\x01\n" +
+	"\x11ReportTaskRequest\x12\x17\n" +
+	"\atask_id\x18\x01 \x01(\tR\x06taskId\x12\x1b\n" +
+	"\tworker_id\x18\x02 \x01(\tR\bworkerId\x12\x18\n" +
+	"\asuccess\x18\x03 \x01(\bR\asuccess\x12%\n" +
+	"\x0efailure_reason\x18\x04 \x01(\tR\rfailureReason\"\x14\n" +
+	"\x12ReportTaskResponse*V\n" +
+	"\x06Action\x12\x16\n" +
+	"\x12ACTION_UNSPECIFIED\x10\x00\x12\x0e\n" +
 	"\n" +
-	"claimed_at\x18\n" +
-	" \x01(\tR\tclaimedAt\x12\x1d\n" +
-	"\n" +
-	"attempt_no\x18\v \x01(\x05R\tattemptNo*i\n" +
-	"\n" +
-	"TaskStatus\x12\x14\n" +
-	"\x10TASK_UNSPECIFIED\x10\x00\x12\x10\n" +
-	"\fTASK_PENDING\x10\x01\x12\x13\n" +
-	"\x0fTASK_PROCESSING\x10\x02\x12\r\n" +
-	"\tTASK_DONE\x10\x03\x12\x0f\n" +
-	"\vTASK_FAILED\x10\x042\xc4\x01\n" +
+	"ACTION_RUN\x10\x01\x12\x0f\n" +
+	"\vACTION_WAIT\x10\x02\x12\x13\n" +
+	"\x0fACTION_SHUTDOWN\x10\x032\xc4\x01\n" +
 	"\vCoordinator\x12<\n" +
 	"\tHeartbeat\x12\x16.dfps.HeartbeatRequest\x1a\x17.dfps.HeartbeatResponse\x126\n" +
 	"\aGetTask\x12\x14.dfps.GetTaskRequest\x1a\x15.dfps.GetTaskResponse\x12?\n" +
 	"\n" +
-	"ReportTask\x12\x14.dfps.GetTaskRequest\x1a\x1b.dfps.GetTaskReportResponseB*Z(github.com/Gurveer1510/dfps/proto/dfpspbb\x06proto3"
+	"ReportTask\x12\x17.dfps.ReportTaskRequest\x1a\x18.dfps.ReportTaskResponseB*Z(github.com/Gurveer1510/dfps/proto/dfpspbb\x06proto3"
 
 var (
 	file_proto_dfps_proto_rawDescOnce sync.Once
@@ -476,30 +508,31 @@ func file_proto_dfps_proto_rawDescGZIP() []byte {
 }
 
 var file_proto_dfps_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_proto_dfps_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_proto_dfps_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_proto_dfps_proto_goTypes = []any{
-	(TaskStatus)(0),               // 0: dfps.TaskStatus
-	(*HeartbeatRequest)(nil),      // 1: dfps.HeartbeatRequest
-	(*HeartbeatResponse)(nil),     // 2: dfps.HeartbeatResponse
-	(*GetTaskRequest)(nil),        // 3: dfps.GetTaskRequest
-	(*GetTaskResponse)(nil),       // 4: dfps.GetTaskResponse
-	(*GetTaskReportResponse)(nil), // 5: dfps.GetTaskReportResponse
+	(Action)(0),                // 0: dfps.Action
+	(*HeartbeatRequest)(nil),   // 1: dfps.HeartbeatRequest
+	(*HeartbeatResponse)(nil),  // 2: dfps.HeartbeatResponse
+	(*GetTaskRequest)(nil),     // 3: dfps.GetTaskRequest
+	(*Task)(nil),               // 4: dfps.Task
+	(*GetTaskResponse)(nil),    // 5: dfps.GetTaskResponse
+	(*ReportTaskRequest)(nil),  // 6: dfps.ReportTaskRequest
+	(*ReportTaskResponse)(nil), // 7: dfps.ReportTaskResponse
 }
 var file_proto_dfps_proto_depIdxs = []int32{
-	0, // 0: dfps.GetTaskResponse.state:type_name -> dfps.TaskStatus
-	0, // 1: dfps.GetTaskReportResponse.status:type_name -> dfps.TaskStatus
-	0, // 2: dfps.GetTaskReportResponse.state:type_name -> dfps.TaskStatus
-	1, // 3: dfps.Coordinator.Heartbeat:input_type -> dfps.HeartbeatRequest
-	3, // 4: dfps.Coordinator.GetTask:input_type -> dfps.GetTaskRequest
-	3, // 5: dfps.Coordinator.ReportTask:input_type -> dfps.GetTaskRequest
-	2, // 6: dfps.Coordinator.Heartbeat:output_type -> dfps.HeartbeatResponse
-	4, // 7: dfps.Coordinator.GetTask:output_type -> dfps.GetTaskResponse
-	5, // 8: dfps.Coordinator.ReportTask:output_type -> dfps.GetTaskReportResponse
-	6, // [6:9] is the sub-list for method output_type
-	3, // [3:6] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	4, // 0: dfps.GetTaskResponse.task:type_name -> dfps.Task
+	0, // 1: dfps.GetTaskResponse.action:type_name -> dfps.Action
+	1, // 2: dfps.Coordinator.Heartbeat:input_type -> dfps.HeartbeatRequest
+	3, // 3: dfps.Coordinator.GetTask:input_type -> dfps.GetTaskRequest
+	6, // 4: dfps.Coordinator.ReportTask:input_type -> dfps.ReportTaskRequest
+	2, // 5: dfps.Coordinator.Heartbeat:output_type -> dfps.HeartbeatResponse
+	5, // 6: dfps.Coordinator.GetTask:output_type -> dfps.GetTaskResponse
+	7, // 7: dfps.Coordinator.ReportTask:output_type -> dfps.ReportTaskResponse
+	5, // [5:8] is the sub-list for method output_type
+	2, // [2:5] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_proto_dfps_proto_init() }
@@ -513,7 +546,7 @@ func file_proto_dfps_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_dfps_proto_rawDesc), len(file_proto_dfps_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -30,7 +30,7 @@ const (
 type CoordinatorClient interface {
 	Heartbeat(ctx context.Context, in *HeartbeatRequest, opts ...grpc.CallOption) (*HeartbeatResponse, error)
 	GetTask(ctx context.Context, in *GetTaskRequest, opts ...grpc.CallOption) (*GetTaskResponse, error)
-	ReportTask(ctx context.Context, in *GetTaskRequest, opts ...grpc.CallOption) (*GetTaskReportResponse, error)
+	ReportTask(ctx context.Context, in *ReportTaskRequest, opts ...grpc.CallOption) (*ReportTaskResponse, error)
 }
 
 type coordinatorClient struct {
@@ -61,9 +61,9 @@ func (c *coordinatorClient) GetTask(ctx context.Context, in *GetTaskRequest, opt
 	return out, nil
 }
 
-func (c *coordinatorClient) ReportTask(ctx context.Context, in *GetTaskRequest, opts ...grpc.CallOption) (*GetTaskReportResponse, error) {
+func (c *coordinatorClient) ReportTask(ctx context.Context, in *ReportTaskRequest, opts ...grpc.CallOption) (*ReportTaskResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTaskReportResponse)
+	out := new(ReportTaskResponse)
 	err := c.cc.Invoke(ctx, Coordinator_ReportTask_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -77,7 +77,7 @@ func (c *coordinatorClient) ReportTask(ctx context.Context, in *GetTaskRequest, 
 type CoordinatorServer interface {
 	Heartbeat(context.Context, *HeartbeatRequest) (*HeartbeatResponse, error)
 	GetTask(context.Context, *GetTaskRequest) (*GetTaskResponse, error)
-	ReportTask(context.Context, *GetTaskRequest) (*GetTaskReportResponse, error)
+	ReportTask(context.Context, *ReportTaskRequest) (*ReportTaskResponse, error)
 	mustEmbedUnimplementedCoordinatorServer()
 }
 
@@ -94,7 +94,7 @@ func (UnimplementedCoordinatorServer) Heartbeat(context.Context, *HeartbeatReque
 func (UnimplementedCoordinatorServer) GetTask(context.Context, *GetTaskRequest) (*GetTaskResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetTask not implemented")
 }
-func (UnimplementedCoordinatorServer) ReportTask(context.Context, *GetTaskRequest) (*GetTaskReportResponse, error) {
+func (UnimplementedCoordinatorServer) ReportTask(context.Context, *ReportTaskRequest) (*ReportTaskResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ReportTask not implemented")
 }
 func (UnimplementedCoordinatorServer) mustEmbedUnimplementedCoordinatorServer() {}
@@ -155,7 +155,7 @@ func _Coordinator_GetTask_Handler(srv interface{}, ctx context.Context, dec func
 }
 
 func _Coordinator_ReportTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTaskRequest)
+	in := new(ReportTaskRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -167,7 +167,7 @@ func _Coordinator_ReportTask_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: Coordinator_ReportTask_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CoordinatorServer).ReportTask(ctx, req.(*GetTaskRequest))
+		return srv.(CoordinatorServer).ReportTask(ctx, req.(*ReportTaskRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
